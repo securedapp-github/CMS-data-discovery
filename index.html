@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Governance Portal</title>
+  <link rel="icon" type="image/png" href="cms.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="cms.png" alt="Secure CMS Logo" />
+      </div>
+      <!-- <h2>Secure CMS</h2> -->
+      <h2>Data Governance Portal</h2>
+      <p>Please sign in with your corporate account to continue.</p>
+      <div id="google-login-btn"></div>
+    </div>
+  </div>
+
+  <div id="app-content" hidden>
+    <!-- Glassmorphic Header -->
+    <header class="header">
+      <div class="logo-area">
+        <img src="cms.png" alt="Secure CMS Logo" class="header-logo" />
+        <h2>Data Governance Portal</h2>
+      </div>
+      <div id="user-profile" class="user-profile">
+        <img id="user-avatar" src="" alt="" />
+        <span id="user-name"></span>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Section 1: Source Configuration -->
+      <section class="card" id="source-config">
+        <div class="card-title-group">
+          <h2><span>01</span> Configure Data Source</h2>
+          <p class="subtitle">Enter the metadata for your target database connection.</p>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="source-name">Source Name</label>
+            <input type="text" id="source-name" placeholder="e.g. CRM Production" />
+          </div>
+          <div class="form-group">
+            <label for="db-type">DB Type</label>
+            <select id="db-type">
+              <option value="" disabled selected>Select Engine</option>
+              <option>MySQL</option>
+              <option>PostgreSQL</option>
+              <option>MSSQL</option>
+              <option>Oracle</option>
+              <option>MariaDB</option>
+            </select>
+          </div>
+        </div>
+        <button class="primary-btn" id="save-source-btn">Save Configuration</button>
+      </section>
+
+      <!-- Section 2: Schema Upload -->
+      <section class="card" id="schema-upload">
+        <div class="card-title-group">
+          <h2><span>02</span> Upload Schema Artifact</h2>
+          <p class="subtitle">Upload your .sql schema file for AI-powered classification.</p>
+        </div>
+        <div class="upload-area" id="drop-zone">
+          <div class="upload-icon">📄</div>
+          <p>Drag & drop your <strong>.sql</strong> file here</p>
+          <p class="small-text">or click to browse filesystem</p>
+          <input type="file" id="file-input" accept=".sql" />
+        </div>
+        <button class="primary-btn" id="process-schema-btn" style="width: 100%;">
+          Process & Run Discovery
+        </button>
+      </section>
+
+      <!-- Section 3: Parsed Schema Preview -->
+      <section class="card collapsible" id="schema-preview">
+        <div class="card-header" onclick="toggleSection('parsed-table-wrapper')">
+          <h2><span>03</span> Schema Structure Preview</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="table-wrapper" id="parsed-table-wrapper">
+          <table id="parsed-table">
+            <thead>
+              <tr>
+                <th>Table</th>
+                <th>Column</th>
+                <th>Technical Datatype</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 4: AI Mapping Results -->
+      <section class="card" id="ai-results">
+        <div class="card-header" onclick="toggleSection('results-table-wrapper')">
+          <h2><span>04</span> AI Governance Mapping</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="table-wrapper" id="results-table-wrapper">
+          <table id="results-table">
+            <thead>
+              <tr>
+                <th>Table</th>
+                <th>Column</th>
+                <th>Suggested Entity</th>
+                <th>Classification</th>
+                <th>Sensitivity</th>
+                <th>Conf.</th>
+                <th>AI Reasoning</th>
+                <th>Status</th>
+                <th>Validation</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 6: Governance Summary -->
+      <section class="card" id="summary-cards">
+        <div class="card-title-group">
+          <h2><span>05</span> Mapping Insights</h2>
+          <p class="subtitle">Overview of classified entities and sensitivity distribution.</p>
+        </div>
+        <div class="summary-grid" id="summary-grid">
+          <!-- Cards injected by JS -->
+        </div>
+      </section>
+
+      <!-- Section 7: Download Buttons -->
+      <section class="card" id="download-section">
+        <div class="card-title-group">
+          <h2><span>06</span> Export Governance Map</h2>
+          <p class="subtitle">Generate portable mapping files for integration.</p>
+        </div>
+        <div class="btn-group">
+          <button class="secondary-btn" id="download-json">Export as JSON</button>
+          <button class="secondary-btn" id="download-csv">Export as CSV</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Remap Modal -->
+    <div id="remap-modal" class="modal" hidden>
+      <div class="modal-content">
+        <span class="close" id="remap-close">&times;</span>
+        <h3>Manual Override</h3>
+        <p class="modal-subtitle">Select the correct entity mapping for this column.</p>
+        <select id="remap-select"></select>
+        <button class="primary-btn" id="remap-confirm" style="width: 100%;">Apply Override</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
