@@ -3,7 +3,7 @@
  */
 
 const CONFIG = {
-  API_BASE_URL: 'http://localhost:5001'
+  API_BASE_URL: 'https://cms-datagovernance-be.securedapp.io'
 };
 
 // 1. App State
