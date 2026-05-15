@@ -76,7 +76,7 @@ window.onload = () => {
   }
 
   // Theme Toggle Logic
-  const savedTheme = localStorage.getItem('gov_ai_theme') || 'dark';
+  const savedTheme = localStorage.getItem('gov_ai_theme') || 'light';
   if (savedTheme === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
   }
