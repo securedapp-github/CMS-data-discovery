@@ -20,6 +20,18 @@
   --font: 'Outfit', system-ui, -apple-system, sans-serif;
 }
 
+/* Light Theme Variables */
+[data-theme="light"] {
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --primary-glow: rgba(79, 70, 229, 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.04), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -162,6 +174,69 @@ body {
 
 .logout-btn:hover {
   background: rgba(239, 68, 68, 0.1);
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] body {
+  background-image:
+    radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.03) 0px, transparent 50%);
+}
+
+[data-theme="light"] .header {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="light"] .user-profile {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="light"] .upload-area {
+  background: rgba(241, 245, 249, 0.5);
+}
+
+[data-theme="light"] .table-wrapper {
+  background: #ffffff;
+}
+
+[data-theme="light"] th {
+  background: #f1f5f9;
+}
+
+[data-theme="light"] tr:hover td {
+  background: rgba(79, 70, 229, 0.02);
+}
+
+[data-theme="light"] .header-logo,
+[data-theme="light"] .login-logo img {
+  filter: none;
 }
 
 .card-title-group {

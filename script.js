@@ -56,7 +56,8 @@ const selectors = {
   remapModal: document.getElementById('remap-modal'),
   remapClose: document.getElementById('remap-close'),
   remapSelect: document.getElementById('remap-select'),
-  remapConfirm: document.getElementById('remap-confirm')
+  remapConfirm: document.getElementById('remap-confirm'),
+  themeToggle: document.getElementById('theme-toggle')
 };
 
 let currentRemapIndex = null;
@@ -73,6 +74,23 @@ window.onload = () => {
     updateAuthUI(appState.user);
     showToast(`Welcome back, ${appState.user.given_name}!`);
   }
+
+  // Theme Toggle Logic
+  const savedTheme = localStorage.getItem('gov_ai_theme') || 'dark';
+  if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+
+  selectors.themeToggle.onclick = () => {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('gov_ai_theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('gov_ai_theme', 'light');
+    }
+  };
 };
 
 // Google Auth Logic
@@ -199,6 +217,13 @@ selectors.processSchemaBtn.addEventListener('click', async () => {
 });
 
 function renderParsedTable() {
+  // Sort by table, then column
+  appState.schema.sort((a, b) => {
+    const tableComp = a.table.localeCompare(b.table);
+    if (tableComp !== 0) return tableComp;
+    return a.column.localeCompare(b.column);
+  });
+
   selectors.parsedTableBody.innerHTML = appState.schema.map(row => `
     <tr>
       <td>${row.table}</td>
@@ -209,6 +234,13 @@ function renderParsedTable() {
 }
 
 function renderResultsTable() {
+  // Sort by table, then column
+  appState.aiMappings.sort((a, b) => {
+    const tableComp = a.table.localeCompare(b.table);
+    if (tableComp !== 0) return tableComp;
+    return a.column.localeCompare(b.column);
+  });
+
   selectors.resultsTableBody.innerHTML = appState.aiMappings.map((row, index) => `
     <tr>
       <td>${row.table}</td>
@@ -303,8 +335,9 @@ selectors.downloadJsonBtn.onclick = () => {
   const approvedOnly = appState.aiMappings.filter(m => m.status === 'approved' || m.status === 'remapped');
   if (approvedOnly.length === 0) return showToast("No approved mappings to download");
 
+  const fileName = (appState.source.name || 'governance-map').replace(/\s+/g, '_').toLowerCase();
   const blob = new Blob([JSON.stringify(approvedOnly, null, 2)], { type: 'application/json' });
-  downloadBlob(blob, 'governance-map.json');
+  downloadBlob(blob, `${fileName}.json`);
 };
 
 selectors.downloadCsvBtn.onclick = () => {
@@ -316,8 +349,9 @@ selectors.downloadCsvBtn.onclick = () => {
     csv += `"${appState.source.name}","${r.table}","${r.column}","${r.datatype}","${r.suggested_field_id}","${r.display_name}","${r.category}","${r.sensitivity}",${r.confidence},"${r.status}"\n`;
   });
 
+  const fileName = (appState.source.name || 'governance-map').replace(/\s+/g, '_').toLowerCase();
   const blob = new Blob([csv], { type: 'text/csv' });
-  downloadBlob(blob, 'governance-map.csv');
+  downloadBlob(blob, `${fileName}.csv`);
 };
 
 function downloadBlob(blob, filename) {
